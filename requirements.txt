@@ -1,0 +1,23 @@
+
+  # ============================================
+  # IMDB Duygu Analizi - Gereksinimler
+  # Python 3.8+ gereklidir
+  # ============================================
+
+  # Derin Öğrenme
+  tensorflow>=2.10.0
+
+  # Veri İşleme
+  numpy>=1.21.0
+  pandas>=1.4.0
+  scikit-learn>=1.0.0
+
+  # Görselleştirme
+  matplotlib>=3.5.0
+  seaborn>=0.11.0
+
+  # Model Kaydetme
+  h5py>=3.6.0
+
+  # İlerleme Çubuğu
+  tqdm>=4.62.0
