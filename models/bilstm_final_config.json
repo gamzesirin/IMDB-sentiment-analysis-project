@@ -1,0 +1,12 @@
+{
+    "model_name": "BiLSTM_Model",
+    "epochs": 10,
+    "batch_size": 64,
+    "train_samples": 35000,
+    "val_samples": 5000,
+    "start_time": "2025-12-10 17:30:39",
+    "training_time_seconds": 4310.297321,
+    "end_time": "2025-12-10 18:42:29",
+    "best_epoch": 2,
+    "best_val_accuracy": 0.8727999925613403
+}
