@@ -37,7 +37,7 @@ class SentimentAnalysisPipeline:
         """
         # Varsayılan yapılandırma
         self.config = {
-            'data_path': 'data/IMDB Dataset.csv',
+            'data_path': 'data/IMDB_Dataset.csv',
             'max_words': 10000,
             'max_len': 200,
             'embedding_dim': 128,
@@ -507,7 +507,7 @@ def main():
     parser.add_argument(
         '--data', '-d',
         type=str,
-        default='data/IMDB Dataset.csv',
+        default='data/IMDB_Dataset.csv',
         help='Veri dosyası yolu'
     )
     
