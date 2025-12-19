@@ -68,6 +68,8 @@ Kaggle'dan veri setini indirin ve `data/` klasörüne yerleştirin:
 # Kaggle CLI kullanarak
 kaggle datasets download -d lakshmi25npathi/imdb-dataset-of-50k-movie-reviews
 unzip imdb-dataset-of-50k-movie-reviews.zip -d data/
+# Dosya adını düzenleyin (boşluk yerine alt çizgi)
+mv data/IMDB\ Dataset.csv data/IMDB_Dataset.csv
 ```
 
 ---
@@ -78,7 +80,7 @@ unzip imdb-dataset-of-50k-movie-reviews.zip -d data/
 
 ```bash
 # Varsayılan ayarlarla (BiLSTM modeli)
-python main.py --data data/IMDB\ Dataset.csv
+python main.py --data data/IMDB_Dataset.csv
 
 # Farklı bir model ile
 python main.py --model lstm --epochs 15 --batch-size 32
@@ -89,10 +91,10 @@ python main.py --compare
 
 ### Komut Satırı Parametreleri
 
-| Parametre      | Kısa | Varsayılan              | Açıklama                    |
-| -------------- | ---- | ----------------------- | --------------------------- |
-| `--data`       | `-d` | `data/IMDB Dataset.csv` | Veri dosyası yolu           |
-| `--model`      | `-m` | `bilstm`                | Model tipi                  |
+| Parametre      | Kısa | Varsayılan               | Açıklama                    |
+| -------------- | ---- | ------------------------ | --------------------------- |
+| `--data`       | `-d` | `data/IMDB_Dataset.csv`  | Veri dosyası yolu           |
+| `--model`      | `-m` | `bilstm`                 | Model tipi                  |
 | `--epochs`     | `-e` | `10`                    | Epoch sayısı                |
 | `--batch-size` | `-b` | `64`                    | Batch boyutu                |
 | `--max-words`  | -    | `10000`                 | Kelime haznesi boyutu       |
@@ -181,6 +183,18 @@ Embedding → Conv1D → MaxPool → Conv1D → MaxPool → LSTM → Dense → S
 Embedding → BiLSTM → Self-Attention → GlobalAvgPool → Dense → Sigmoid
 ```
 
+### 8. Deep LSTM
+
+```
+Embedding → SpatialDropout → LSTM → Dropout → LSTM → Dropout → LSTM → Dense → Sigmoid
+```
+
+### 9. Simple RNN
+
+```
+Embedding → SpatialDropout → SimpleRNN → Dropout → Dense → Sigmoid
+```
+
 ---
 
 ## Proje Yapısı
@@ -189,18 +203,29 @@ Embedding → BiLSTM → Self-Attention → GlobalAvgPool → Dense → Sigmoid
 imdb_sentiment_analysis/
 │
 ├── data/                          # Veri dosyaları
-│   └── IMDB Dataset.csv          # Ham veri
+│   └── IMDB_Dataset.csv          # Ham veri
 │
 ├── models/                        # Eğitilmiş modeller
-│   ├── best_model.keras          # En iyi model
-│   ├── tokenizer.pkl             # Tokenizer
+│   ├── best_model.keras          # En iyi model (EarlyStopping)
+│   ├── bilstm_final.keras        # Final model
+│   ├── bilstm_final_config.json  # Model yapılandırması
+│   ├── bilstm_final_history.pkl  # Eğitim geçmişi
+│   └── tokenizer.pkl             # Tokenizer
 │
 ├── results/                       # Sonuç grafikleri
 │   ├── sentiment_distribution.png
+│   ├── text_length_distribution.png
 │   ├── training_history.png
+│   ├── detailed_metrics.png
 │   ├── confusion_matrix.png
+│   ├── confusion_matrix_normalized.png
 │   ├── roc_curve.png
-│   └── model_comparison.png
+│   ├── pr_curve.png
+│   ├── prediction_distribution.png
+│   ├── evaluation_metrics.png
+│   ├── metrics.json              # Değerlendirme metrikleri
+│   ├── config.json               # Yapılandırma
+│   └── training_summary.json     # Eğitim özeti
 │
 ├── src/                           # Kaynak kodlar
 │   ├── __init__.py
@@ -211,7 +236,9 @@ imdb_sentiment_analysis/
 │   └── evaluator.py              # Değerlendirme
 │
 ├── main.py                        # Ana çalıştırma dosyası
+├── test_project.py                # Test dosyası
 ├── requirements.txt               # Bağımlılıklar
+├── .gitignore                     # Git ignore dosyası
 └── README.md                      # Bu dosya
 ```
 
@@ -219,15 +246,18 @@ imdb_sentiment_analysis/
 
 ## Sonuçlar
 
-### Model Karşılaştırması
+### Model Sonuçları (BiLSTM)
 
-| Model    | Accuracy | Precision | Recall   | F1-Score | ROC-AUC  |
-| -------- | -------- | --------- | -------- | -------- | -------- |
-| LSTM     | 0.87     | 0.86      | 0.88     | 0.87     | 0.94     |
-| BiLSTM   | **0.89** | **0.88**  | **0.90** | **0.89** | **0.95** |
-| GRU      | 0.87     | 0.86      | 0.88     | 0.87     | 0.94     |
-| CNN      | 0.86     | 0.85      | 0.87     | 0.86     | 0.93     |
-| CNN+LSTM | 0.88     | 0.87      | 0.89     | 0.88     | 0.94     |
+| Metrik    | Değer  |
+| --------- | ------ |
+| Accuracy  | 0.867  |
+| Precision | 0.889  |
+| Recall    | 0.839  |
+| F1-Score  | 0.863  |
+| ROC-AUC   | 0.943  |
+| PR-AUC    | 0.939  |
+
+> Not: Yukarıdaki sonuçlar varsayılan BiLSTM modeli ile elde edilmiştir. Diğer modellerin sonuçları için `python main.py --compare` komutunu çalıştırın.
 
 ### Temel Bulgular
 
