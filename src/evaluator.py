@@ -324,13 +324,14 @@ class ModelEvaluator:
         print(f"   Recall at optimal: {recall[optimal_idx]:.4f}")
         print(f"   F1 at optimal: {f1_scores[optimal_idx]:.4f}")
     
-    def plot_all_metrics(self, y_true: np.ndarray, save_dir: str = None):
+    def plot_all_metrics(self, y_true: np.ndarray, save_dir: str = None, prefix: str = None):
         """
         Tüm değerlendirme grafiklerini oluşturur.
-        
+
         Args:
             y_true: Gerçek etiketler
             save_dir: Kayıt dizini
+            prefix: Dosya adı öneki (model adı için)
         """
         if self.predictions is None:
             raise ValueError("Önce tahmin yapılmalı!")
@@ -390,7 +391,8 @@ class ModelEvaluator:
         plt.tight_layout()
         
         if save_dir:
-            save_path = f"{save_dir}/evaluation_metrics.png"
+            filename = f"{prefix}_evaluation_metrics.png" if prefix else "evaluation_metrics.png"
+            save_path = f"{save_dir}/{filename}"
             plt.savefig(save_path, dpi=300, bbox_inches='tight')
             print(f" Grafik kaydedildi: {save_path}")
         

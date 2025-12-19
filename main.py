@@ -253,14 +253,17 @@ class SentimentAnalysisPipeline:
             callbacks=callbacks
         )
         
+        # Model tipi
+        model_name = self.config['model_type']
+
         # Eğitim grafiği
         self.trainer.plot_training_history(
-            save_path=f"{self.config['results_dir']}/training_history.png"
+            save_path=f"{self.config['results_dir']}/{model_name}_training_history.png"
         )
-        
+
         # Detaylı metrikler
         self.trainer.plot_detailed_metrics(
-            save_path=f"{self.config['results_dir']}/detailed_metrics.png"
+            save_path=f"{self.config['results_dir']}/{model_name}_detailed_metrics.png"
         )
         
         # Model kaydet
@@ -287,41 +290,45 @@ class SentimentAnalysisPipeline:
             self.X_test, self.y_test
         )
         
+        # Model tipi
+        model_name = self.config['model_type']
+
         # Confusion Matrix
         self.evaluator.plot_confusion_matrix(
             self.y_test,
-            save_path=f"{self.config['results_dir']}/confusion_matrix.png"
+            save_path=f"{self.config['results_dir']}/{model_name}_confusion_matrix.png"
         )
-        
+
         # Normalized Confusion Matrix
         self.evaluator.plot_confusion_matrix(
             self.y_test,
             normalize=True,
-            save_path=f"{self.config['results_dir']}/confusion_matrix_normalized.png"
+            save_path=f"{self.config['results_dir']}/{model_name}_confusion_matrix_normalized.png"
         )
-        
+
         # ROC Curve
         self.evaluator.plot_roc_curve(
             self.y_test,
-            save_path=f"{self.config['results_dir']}/roc_curve.png"
+            save_path=f"{self.config['results_dir']}/{model_name}_roc_curve.png"
         )
-        
+
         # Precision-Recall Curve
         self.evaluator.plot_precision_recall_curve(
             self.y_test,
-            save_path=f"{self.config['results_dir']}/pr_curve.png"
+            save_path=f"{self.config['results_dir']}/{model_name}_pr_curve.png"
         )
-        
+
         # Tahmin dağılımı
         self.evaluator.plot_prediction_distribution(
             self.y_test,
-            save_path=f"{self.config['results_dir']}/prediction_distribution.png"
+            save_path=f"{self.config['results_dir']}/{model_name}_prediction_distribution.png"
         )
-        
+
         # Tüm metrikler
         self.evaluator.plot_all_metrics(
             self.y_test,
-            save_dir=self.config['results_dir']
+            save_dir=self.config['results_dir'],
+            prefix=model_name
         )
         
         # Optimal threshold
@@ -405,26 +412,28 @@ class SentimentAnalysisPipeline:
     
     def save_results(self):
         """Tüm sonuçları kaydeder."""
+        model_name = self.config['model_type']
+
         # Yapılandırma
-        config_path = f"{self.config['results_dir']}/config.json"
+        config_path = f"{self.config['results_dir']}/{model_name}_config.json"
         with open(config_path, 'w') as f:
             json.dump(self.config, f, indent=4)
-        
+
         # Metrikler
         if self.evaluator and self.evaluator.metrics:
-            metrics_path = f"{self.config['results_dir']}/metrics.json"
+            metrics_path = f"{self.config['results_dir']}/{model_name}_metrics.json"
             with open(metrics_path, 'w') as f:
                 json.dump({k: float(v) for k, v in self.evaluator.metrics.items()}, f, indent=4)
-        
+
         # Eğitim özeti
         if self.trainer:
             summary = self.trainer.get_training_summary()
-            summary_path = f"{self.config['results_dir']}/training_summary.json"
+            summary_path = f"{self.config['results_dir']}/{model_name}_training_summary.json"
             with open(summary_path, 'w') as f:
-                json.dump({k: float(v) if isinstance(v, (int, float)) else v 
+                json.dump({k: float(v) if isinstance(v, (int, float)) else v
                           for k, v in summary.items()}, f, indent=4)
-        
-        print(f"\nSonuclar kaydedildi: {self.config['results_dir']}/")
+
+        print(f"\nSonuclar kaydedildi: {self.config['results_dir']}/{model_name}_*.json")
     
     def demo(self):
         """Demo tahminler yapar."""

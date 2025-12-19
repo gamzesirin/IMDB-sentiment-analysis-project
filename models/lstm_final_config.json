@@ -1,0 +1,12 @@
+{
+    "model_name": "LSTM_Model",
+    "epochs": 10,
+    "batch_size": 64,
+    "train_samples": 35000,
+    "val_samples": 5000,
+    "start_time": "2025-12-19 17:49:20",
+    "training_time_seconds": 1117.787326,
+    "end_time": "2025-12-19 18:07:57",
+    "best_epoch": 9,
+    "best_val_accuracy": 0.8664000034332275
+}

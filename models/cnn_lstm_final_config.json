@@ -1,0 +1,12 @@
+{
+    "model_name": "CNN_LSTM_Model",
+    "epochs": 10,
+    "batch_size": 64,
+    "train_samples": 35000,
+    "val_samples": 5000,
+    "start_time": "2025-12-19 19:28:44",
+    "training_time_seconds": 115.702547,
+    "end_time": "2025-12-19 19:30:40",
+    "best_epoch": 1,
+    "best_val_accuracy": 0.8805999755859375
+}
